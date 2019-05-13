@@ -1,0 +1,74 @@
+Time Records:
+
+V0:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 1 threads
+Initialization took 0.030228 seconds
+Simulation took 254.779164 seconds
+Init+Simulation took 254.809392 seconds
+
+V1:
+optimization:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 1 threads
+Initialization took 0.028272 seconds
+Simulation took 245.492258 seconds
+Init+Simulation took 245.520530 seconds
+
+Parallel:
+inner loop:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.031726 seconds
+Simulation took 57.405047 seconds
+Init+Simulation took 57.436773 seconds
+
+outer loop:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.032809 seconds
+Simulation took 14.217201 seconds
+Init+Simulation took 14.250010 seconds
+
+both:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.030531 seconds
+Simulation took 26.337364 seconds
+Init+Simulation took 26.367895 seconds
+
+V2:
+Parallelize init():
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.059177 seconds
+Simulation took 13.971314 seconds
+Init+Simulation took 14.030491 seconds
+
+Parallelize memcpy():
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.046421 seconds
+Simulation took 14.147966 seconds
+Init+Simulation took 14.194387 seconds
+
+Dynamic schedule:
+running ./lake with (1024 x 1024) grid, until 2.000000, with 16 threads
+Initialization took 0.034656 seconds
+Simulation took 15.956764 seconds
+Init+Simulation took 15.991420 seconds
+
+Q & A
+
+How/why does your optimization for removing memory copies work?
+Because after optimization, it is actually just swaping the pointers to the memories but not memory copy.
+
+Does which loop you parallelized matter? Why or why not?
+Both matter but parallelising outer loop performs best. Because if only parallelized inner loop, then at the end of each iteration of outer loop, all the threads need to synchronize which produces extra waiting time.
+
+Does parallelizing both loops make a difference? Why or why not?
+Yes, but it performs slower than only parallelising outer loop. So it may show that in general it should be fastest to parallelise the outer loop only. Parallelising the inner loop may add an overhead for each parallel region.
+
+Why does parallelizing memory initializations matter?
+Because after parallelizing, memory copies happen parallelly.
+
+Does the scheduling type matter? Why or why not?
+No. There is no obvious difference between static and dynamic scheduling from results.
+
+This program is particularly easy to parallelize. Why?
+Because there is no data dependency across different parallel region.
+
+(Optional) Can you think of other optimizations either in the code or the OpenMP directives that could further speed up the program? Include a thorough discussion of optimizations. If you'd like to implement these optimizations, please do so in separate files from the base code. You may also submit timings from demonstration runs showing the speedup.

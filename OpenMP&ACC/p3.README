@@ -1,0 +1,22 @@
+Serial:
+
+running ./lake with (512 x 512) grid, until 4.000000, with 1 threads
+Initialization took 0.009609 seconds
+Simulation took 60.942279 seconds
+Init+Simulation took 60.951888 seconds
+
+Naive OpenACC:
+
+running ./lake with (512 x 512) grid, until 4.000000, with 1 threads
+Initialization took 0.011399 seconds
+Simulation took 30.426272 seconds
+Init+Simulation took 30.437671 seconds
+
+Optimization:
+
+running ./lake with (512 x 512) grid, until 4.000000, with 1 threads
+Initialization took 0.008365 seconds
+Simulation took 17.123436 seconds
+Init+Simulation took 17.131801 seconds
+
+My Optimization is to move array copies outside the while clause so that the times of array copies reduce. 
